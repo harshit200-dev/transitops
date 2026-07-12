@@ -1,0 +1,100 @@
+import { createContext, useContext, useState, useEffect } from 'react';
+
+const SettingsContext = createContext(null);
+
+export const translations = {
+  en: {
+    dashboard: 'Dashboard', vehicles: 'Vehicles', drivers: 'Drivers', trips: 'Trips',
+    maintenance: 'Maintenance', finance: 'Finance', reports: 'Reports', aiAssistant: 'AI Assistant',
+    signOut: 'Sign Out', fleetManagement: 'Fleet Management',
+    totalVehicles: 'Total Vehicles', activeVehicles: 'Active Vehicles',
+    inMaintenance: 'In Maintenance', activeTrips: 'Active Trips',
+    activeDrivers: 'Active Drivers', fleetUtilization: 'Fleet Utilization',
+    addVehicle: 'Add Vehicle', editVehicle: 'Edit Vehicle',
+    registration: 'Registration Number', make: 'Make', model: 'Model',
+    year: 'Year', fuelType: 'Fuel Type', mileage: 'Current Mileage (km)',
+    capacity: 'Capacity (kg)', status: 'Status', actions: 'Actions',
+    save: 'Save', cancel: 'Cancel', delete: 'Delete', search: 'Search vehicles...',
+    allStatuses: 'All Statuses', noVehicles: 'No vehicles found',
+    addDriver: 'Add Driver', editDriver: 'Edit Driver',
+    name: 'Full Name', licenseNumber: 'License Number', licenseClass: 'License Class',
+    licenseExpiry: 'License Expiry', phone: 'Phone', noDrivers: 'No drivers found',
+    licenseAlerts: 'License Alerts', expired: 'license EXPIRED', expiringSoon: 'expiring soon',
+    newTrip: 'New Trip', startLocation: 'Start Location', endLocation: 'End Location',
+    selectVehicle: 'Select vehicle...', selectDriver: 'Select driver...',
+    startMileage: 'Start Mileage (km)', noTrips: 'No trips found',
+    addRecord: 'Add Record', description: 'Description', cost: 'Cost ($)',
+    scheduledDate: 'Scheduled Date', serviceProvider: 'Service Provider',
+    noMaintenance: 'No maintenance records', type: 'Type',
+    addFuelLog: 'Add Fuel Log', addExpense: 'Add Expense',
+    totalFuelCost: 'Total Fuel Cost', totalExpenses: 'Total Expenses',
+    totalOperationalCost: 'Total Operational Cost', noFuelLogs: 'No fuel logs',
+    noExpenses: 'No expenses', category: 'Category', amount: 'Amount ($)',
+    operationalCosts: 'Operational Costs', vehicleStatusDist: 'Vehicle Status Distribution',
+    costSummary: 'Cost Summary', tripSummary: 'Trip Summary', driverSummary: 'Driver Summary',
+    fuelCosts: 'Fuel Costs', otherExpenses: 'Other Expenses', total: 'Total',
+    scheduled: 'Scheduled', inProgress: 'In Progress', completed: 'Completed',
+    active: 'Active', inactive: 'Inactive', suspended: 'Suspended',
+    language: 'Language', theme: 'Theme', dark: 'Dark', light: 'Light',
+  },
+  hi: {
+    dashboard: 'डैशबोर्ड', vehicles: 'वाहन', drivers: 'चालक', trips: 'यात्राएं',
+    maintenance: 'रखरखाव', finance: 'वित्त', reports: 'रिपोर्ट', aiAssistant: 'AI सहायक',
+    signOut: 'साइन आउट', fleetManagement: 'बेड़ा प्रबंधन',
+    totalVehicles: 'कुल वाहन', activeVehicles: 'सक्रिय वाहन',
+    inMaintenance: 'रखरखाव में', activeTrips: 'सक्रिय यात्राएं',
+    activeDrivers: 'सक्रिय चालक', fleetUtilization: 'बेड़ा उपयोग',
+    addVehicle: 'वाहन जोड़ें', editVehicle: 'वाहन संपादित करें',
+    registration: 'पंजीकरण संख्या', make: 'निर्माता', model: 'मॉडल',
+    year: 'वर्ष', fuelType: 'ईंधन प्रकार', mileage: 'वर्तमान माइलेज (km)',
+    capacity: 'क्षमता (kg)', status: 'स्थिति', actions: 'कार्रवाई',
+    save: 'सहेजें', cancel: 'रद्द करें', delete: 'हटाएं', search: 'वाहन खोजें...',
+    allStatuses: 'सभी स्थितियां', noVehicles: 'कोई वाहन नहीं मिला',
+    addDriver: 'चालक जोड़ें', editDriver: 'चालक संपादित करें',
+    name: 'पूरा नाम', licenseNumber: 'लाइसेंस नंबर', licenseClass: 'लाइसेंस वर्ग',
+    licenseExpiry: 'लाइसेंस समाप्ति', phone: 'फ़ोन', noDrivers: 'कोई चालक नहीं मिला',
+    licenseAlerts: 'लाइसेंस अलर्ट', expired: 'लाइसेंस समाप्त', expiringSoon: 'जल्द समाप्त होगा',
+    newTrip: 'नई यात्रा', startLocation: 'प्रारंभ स्थान', endLocation: 'अंत स्थान',
+    selectVehicle: 'वाहन चुनें...', selectDriver: 'चालक चुनें...',
+    startMileage: 'प्रारंभ माइलेज (km)', noTrips: 'कोई यात्रा नहीं मिली',
+    addRecord: 'रिकॉर्ड जोड़ें', description: 'विवरण', cost: 'लागत ($)',
+    scheduledDate: 'निर्धारित तिथि', serviceProvider: 'सेवा प्रदाता',
+    noMaintenance: 'कोई रखरखाव रिकॉर्ड नहीं', type: 'प्रकार',
+    addFuelLog: 'ईंधन लॉग जोड़ें', addExpense: 'खर्च जोड़ें',
+    totalFuelCost: 'कुल ईंधन लागत', totalExpenses: 'कुल खर्च',
+    totalOperationalCost: 'कुल परिचालन लागत', noFuelLogs: 'कोई ईंधन लॉग नहीं',
+    noExpenses: 'कोई खर्च नहीं', category: 'श्रेणी', amount: 'राशि ($)',
+    operationalCosts: 'परिचालन लागत', vehicleStatusDist: 'वाहन स्थिति वितरण',
+    costSummary: 'लागत सारांश', tripSummary: 'यात्रा सारांश', driverSummary: 'चालक सारांश',
+    fuelCosts: 'ईंधन लागत', otherExpenses: 'अन्य खर्च', total: 'कुल',
+    scheduled: 'निर्धारित', inProgress: 'प्रगति में', completed: 'पूर्ण',
+    active: 'सक्रिय', inactive: 'निष्क्रिय', suspended: 'निलंबित',
+    language: 'भाषा', theme: 'थीम', dark: 'डार्क', light: 'लाइट',
+  },
+};
+
+export function SettingsProvider({ children }) {
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+  const [lang, setLang] = useState(() => localStorage.getItem('lang') || 'en');
+
+  useEffect(() => {
+    localStorage.setItem('theme', theme);
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+  }, [theme]);
+
+  useEffect(() => {
+    localStorage.setItem('lang', lang);
+  }, [lang]);
+
+  const t = translations[lang];
+  const toggleTheme = () => setTheme(p => p === 'dark' ? 'light' : 'dark');
+  const toggleLang = () => setLang(p => p === 'en' ? 'hi' : 'en');
+
+  return (
+    <SettingsContext.Provider value={{ theme, lang, t, toggleTheme, toggleLang }}>
+      {children}
+    </SettingsContext.Provider>
+  );
+}
+
+export const useSettings = () => useContext(SettingsContext);
