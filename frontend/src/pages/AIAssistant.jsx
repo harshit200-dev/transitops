@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { aiService } from '@/services';
 import { Button } from '@/components/ui/Button';
 import { Send, Bot, User, Zap } from 'lucide-react';
+import { useSettings } from '@/hooks/useSettings';
 
 const SUGGESTIONS = [
   'Which vehicles need maintenance?',
@@ -12,6 +13,7 @@ const SUGGESTIONS = [
 ];
 
 export default function AIAssistant() {
+  const { t } = useSettings();
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
@@ -45,10 +47,10 @@ export default function AIAssistant() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-          <Bot size={24} className="text-purple-400" /> AI Assistant
+        <h1 className="text-2xl font-bold text-black dark:text-white flex items-center gap-2">
+          <Bot size={24} className="text-purple-400" /> {t.aiAssistant}
         </h1>
-        <p className="text-gray-400 text-sm mt-1">Powered by fleet data analysis</p>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{t.poweredByFleetDataAnalysis}</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
@@ -63,7 +65,7 @@ export default function AIAssistant() {
                 </div>
                 <div className={`max-w-[80%] rounded-xl px-4 py-3 text-sm leading-relaxed ${
                   m.role === 'assistant'
-                    ? 'bg-gray-800 text-gray-200'
+                    ? 'bg-gray-800 text-gray-200 dark:text-gray-200'
                     : 'bg-purple-600 text-white'
                 }`}>
                   {m.content}
@@ -91,7 +93,7 @@ export default function AIAssistant() {
           <div className="p-4 border-t border-gray-800">
             <div className="flex gap-3">
               <input
-                className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white text-sm placeholder-gray-500 focus:outline-none focus:border-purple-500"
+                className="flex-1 bg-gray-800 border border-gray-700 rounded-lg px-4 py-2.5 text-white dark:text-white text-sm placeholder-gray-500 dark:placeholder-gray-500 focus:outline-none focus:border-purple-500"
                 placeholder="Ask about your fleet..."
                 value={input}
                 onChange={e => setInput(e.target.value)}
@@ -107,13 +109,13 @@ export default function AIAssistant() {
 
         {/* Suggestions */}
         <div className="space-y-3">
-          <h3 className="text-sm font-medium text-gray-400">Suggested Questions</h3>
+          <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">{t.suggestedQuestions}</h3>
           {SUGGESTIONS.map((s, i) => (
             <button
               key={i}
               onClick={() => send(s)}
               disabled={loading}
-              className="w-full text-left bg-gray-900 border border-gray-800 hover:border-purple-600/50 hover:bg-gray-800 rounded-xl p-3 text-sm text-gray-300 transition-colors disabled:opacity-50"
+              className="w-full text-left bg-gray-900 border border-gray-800 hover:border-purple-600/50 hover:bg-gray-800 rounded-xl p-3 text-sm text-gray-300 dark:text-gray-300 transition-colors disabled:opacity-50"
             >
               {s}
             </button>

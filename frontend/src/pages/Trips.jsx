@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { tripService, vehicleService, driverService } from '@/services';
+import { useSettings } from '@/hooks/useSettings';
 import { Button } from '@/components/ui/Button';
 import { Input, Select } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
@@ -11,6 +12,7 @@ const EMPTY = { start_location: '', end_location: '', vehicle_id: '', driver_id:
 const NEXT_STATUS = { Scheduled: 'In Progress', 'In Progress': 'Completed' };
 
 export default function Trips() {
+  const { t } = useSettings();
   const [trips, setTrips] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [drivers, setDrivers] = useState([]);
@@ -86,27 +88,27 @@ export default function Trips() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Trips</h1>
-          <p className="text-gray-400 text-sm mt-1">{trips.length} total trips</p>
+          <h1 className="text-2xl font-bold text-black dark:text-white">Trips</h1>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{trips.length} {t.totalTrips}</p>
         </div>
         <Button onClick={() => { setForm(EMPTY); setError(''); setModal(true); }}>
-          <Plus size={16} /> New Trip
+          <Plus size={16} /> {t.newTrip}
         </Button>
       </div>
 
       <Table>
         <Thead>
-          <Th>Route</Th><Th>Vehicle</Th><Th>Driver</Th><Th>Cargo (kg)</Th><Th>Start Mileage</Th><Th>Status</Th><Th>Actions</Th>
+          <Th>{t.route}</Th><Th>{t.vehicle}</Th><Th>{t.driver}</Th><Th>{t.cargoKg}</Th><Th>{t.startMileage}</Th><Th>{t.status}</Th><Th>{t.actions}</Th>
         </Thead>
         <Tbody>
           {trips.length === 0 ? (
-            <Tr><Td className="text-center py-8 text-gray-500" colSpan={7}>No trips found</Td></Tr>
+            <Tr><Td className="text-center py-8 text-gray-500 dark:text-gray-400" colSpan={7}>{t.noTrips}</Td></Tr>
           ) : trips.map(t => (
             <Tr key={t.id}>
               <Td>
-                <div className="flex items-center gap-1 text-white font-medium">
+                <div className="flex items-center gap-1 text-black dark:text-white font-medium">
                   {t.start_location}
-                  {t.end_location && <><ChevronRight size={14} className="text-gray-500" />{t.end_location}</>}
+                  {t.end_location && <><ChevronRight size={14} className="text-gray-500 dark:text-gray-400" />{t.end_location}</>}
                 </div>
               </Td>
               <Td>{t.vehicles?.registration_number || '—'}</Td>
@@ -129,17 +131,17 @@ export default function Trips() {
         </Tbody>
       </Table>
 
-      <Modal open={modal} onClose={() => setModal(false)} title="Create New Trip">
+      <Modal open={modal} onClose={() => setModal(false)} title={t.createTrip}>
         {error && <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-3">
-            <Input label="Start Location" placeholder="City / Location" value={form.start_location} onChange={set('start_location')} required />
-            <Input label="End Location" placeholder="City / Location" value={form.end_location} onChange={set('end_location')} />
+            <Input label={t.startLocation} placeholder="City / Location" value={form.start_location} onChange={set('start_location')} required />
+            <Input label={t.endLocation} placeholder="City / Location" value={form.end_location} onChange={set('end_location')} />
           </div>
 
           {/* Cargo weight FIRST so vehicle list filters accordingly */}
           <Input
-            label="Cargo Weight (kg)"
+            label={t.cargoWeightKg}
             type="number"
             min="0"
             placeholder="Enter cargo weight to filter vehicles"
@@ -149,8 +151,8 @@ export default function Trips() {
 
           {/* Vehicle selector — filtered by cargo capacity */}
           <div className="flex flex-col gap-1">
-            <label className="text-sm text-gray-400">
-              Vehicle
+            <label className="text-sm text-gray-500 dark:text-gray-400">
+              {t.vehicle}
               {cargoWeight > 0 && (
                 <span className="ml-2 text-xs text-purple-400">
                   — showing vehicles with capacity ≥ {cargoWeight} kg
@@ -163,7 +165,7 @@ export default function Trips() {
               onChange={set('vehicle_id')}
               required
             >
-              <option value="">Select vehicle...</option>
+              <option value="">{t.selectVehicle}</option>
               {eligibleVehicles.length > 0 && (
                 <optgroup label="✅ Eligible Vehicles">
                   {eligibleVehicles.map(v => (
@@ -189,7 +191,7 @@ export default function Trips() {
             {capacityWarning && (
               <div className="flex items-center gap-2 text-yellow-400 text-xs mt-1">
                 <AlertTriangle size={12} />
-                Cargo weight exceeds vehicle capacity!
+                {t.cargoExceedsCapacity}
               </div>
             )}
 
@@ -197,23 +199,23 @@ export default function Trips() {
             {cargoWeight > 0 && eligibleVehicles.length === 0 && (
               <div className="flex items-center gap-2 text-red-400 text-xs mt-1">
                 <AlertTriangle size={12} />
-                No active vehicles can handle {cargoWeight} kg cargo.
+                {t.noEligibleVehicles} {cargoWeight} kg.
               </div>
             )}
           </div>
 
-          <Select label="Driver" value={form.driver_id} onChange={set('driver_id')} required>
-            <option value="">Select driver...</option>
+          <Select label={t.driver} value={form.driver_id} onChange={set('driver_id')} required>
+            <option value="">{t.selectDriver}</option>
             {activeDrivers.map(d => (
               <option key={d.id} value={d.id}>{d.name} — {d.license_number}</option>
             ))}
           </Select>
 
-          <Input label="Start Mileage (km)" type="number" value={form.start_mileage} onChange={set('start_mileage')} required />
+          <Input label={t.startMileageKm} type="number" value={form.start_mileage} onChange={set('start_mileage')} required />
 
           <div className="flex gap-3 pt-2">
-            <Button type="button" variant="outline" className="flex-1" onClick={() => setModal(false)}>Cancel</Button>
-            <Button type="submit" className="flex-1" disabled={loading}>{loading ? 'Creating...' : 'Create Trip'}</Button>
+            <Button type="button" variant="outline" className="flex-1" onClick={() => setModal(false)}>{t.cancel}</Button>
+            <Button type="submit" className="flex-1" disabled={loading}>{loading ? t.creating : t.createTrip}</Button>
           </div>
         </form>
       </Modal>

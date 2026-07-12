@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { vehicleService, fuelService, maintenanceService, tripService } from '@/services';
+import { useSettings } from '@/hooks/useSettings';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Table, Thead, Th, Tbody, Tr, Td } from '@/components/ui/Table';
@@ -9,6 +10,7 @@ import {
 } from 'recharts';
 
 export default function Reports() {
+  const { t } = useSettings();
   const [vehicles, setVehicles] = useState([]);
   const [fuel, setFuel] = useState([]);
   const [maintenance, setMaintenance] = useState([]);
@@ -78,16 +80,16 @@ export default function Reports() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-white">Reports</h1>
-          <p className="text-gray-400 text-sm mt-1">Fleet performance analytics</p>
+          <h1 className="text-2xl font-bold text-black dark:text-white">Reports</h1>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{t.fleetPerformanceAnalytics}</p>
         </div>
-        <Button variant="outline" onClick={exportCSV}><Download size={16} /> Export CSV</Button>
+        <Button variant="outline" onClick={exportCSV}><Download size={16} /> {t.exportCSV}</Button>
       </div>
 
       {/* Fuel trend chart */}
       {monthlyFuel.length > 0 && (
         <Card>
-          <CardHeader><CardTitle>Monthly Fuel Cost Trend</CardTitle></CardHeader>
+          <CardHeader><CardTitle>{t.monthlyFuelCostTrend}</CardTitle></CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={220}>
               <LineChart data={monthlyFuel}>
@@ -107,24 +109,24 @@ export default function Reports() {
 
       {/* Vehicle ROI table */}
       <div>
-        <h2 className="text-lg font-semibold text-white mb-3">Vehicle Performance Report</h2>
+        <h2 className="text-lg font-semibold text-black dark:text-white mb-3">{t.vehiclePerformanceReport}</h2>
         <Table>
           <Thead>
-            <Th>Vehicle</Th>
-            <Th>Trips</Th>
-            <Th>Distance (km)</Th>
-            <Th>Fuel Cost</Th>
-            <Th>Maint. Cost</Th>
-            <Th>Op. Cost</Th>
-            <Th>Efficiency (km/L)</Th>
-            <Th>ROI %</Th>
+            <Th>{t.vehicle}</Th>
+            <Th>{t.trips}</Th>
+            <Th>{t.distanceKm}</Th>
+            <Th>{t.fuelCost}</Th>
+            <Th>{t.maintCost}</Th>
+            <Th>{t.opCost}</Th>
+            <Th>{t.efficiencyKmL}</Th>
+            <Th>{t.roiPercent}</Th>
           </Thead>
           <Tbody>
             {vehicleReports.length === 0 ? (
-              <Tr><Td className="text-center py-8 text-gray-500" colSpan={8}>No data available</Td></Tr>
+              <Tr><Td className="text-center py-8 text-gray-500 dark:text-gray-400" colSpan={8}>{t.noDataAvailable}</Td></Tr>
             ) : vehicleReports.map(v => (
               <Tr key={v.id}>
-                <Td className="text-white font-medium">{v.registration_number}</Td>
+                <Td className="text-black dark:text-white font-medium">{v.registration_number}</Td>
                 <Td>{v.completedTrips}</Td>
                 <Td>{v.totalDistance}</Td>
                 <Td>₹{v.totalFuelCost.toFixed(2)}</Td>

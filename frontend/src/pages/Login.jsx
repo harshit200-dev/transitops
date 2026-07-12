@@ -35,7 +35,7 @@ export default function Login() {
             <Zap size={28} className="text-white" />
           </div>
           <div>
-            <h1 className="text-white font-bold text-2xl leading-none">TransitOps</h1>
+            <h1 className="text-black dark:text-white font-bold text-2xl leading-none">TransitOps</h1>
             <p className="text-gray-500 text-sm">Smart Transport Operations</p>
           </div>
         </div>
