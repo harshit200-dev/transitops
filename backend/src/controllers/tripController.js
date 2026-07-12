@@ -10,9 +10,16 @@ const getAll = async (req, res) => {
 };
 
 const create = async (req, res) => {
-  const { start_location, end_location, vehicle_id, driver_id, start_mileage, start_time } = req.body;
+  const { start_location, end_location, vehicle_id, driver_id, start_mileage, start_time, cargo_weight } = req.body;
   if (!start_location || !vehicle_id || !driver_id || start_mileage === undefined)
     return res.status(400).json({ error: 'start_location, vehicle_id, driver_id, start_mileage required' });
+
+  // Validate cargo weight against vehicle capacity
+  if (cargo_weight) {
+    const { data: vehicle } = await supabase.from('vehicles').select('capacity').eq('id', vehicle_id).single();
+    if (vehicle?.capacity && parseFloat(cargo_weight) > parseFloat(vehicle.capacity))
+      return res.status(400).json({ error: `Cargo weight (${cargo_weight} kg) exceeds vehicle capacity (${vehicle.capacity} kg)` });
+  }
 
   const { data, error } = await supabase
     .from('trips')
@@ -22,6 +29,7 @@ const create = async (req, res) => {
       vehicle_id,
       driver_id,
       start_mileage: parseFloat(start_mileage),
+      cargo_weight: cargo_weight ? parseFloat(cargo_weight) : null,
       start_time: start_time || new Date().toISOString(),
       status: 'Scheduled',
     }])

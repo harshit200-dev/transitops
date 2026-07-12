@@ -12,6 +12,9 @@ const create = async (req, res) => {
   if (!name || !license_number || !license_expiry || !phone || !license_class)
     return res.status(400).json({ error: 'name, license_number, license_class, license_expiry, phone required' });
 
+  if (!/^[0-9]{10}$/.test(phone))
+    return res.status(400).json({ error: 'Phone number must be exactly 10 digits' });
+
   const { data, error } = await supabase
     .from('drivers')
     .insert([{ name, license_number, license_class, license_expiry, phone, status: 'Active' }])

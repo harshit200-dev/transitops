@@ -29,12 +29,24 @@ export default function Drivers() {
   const load = () => driverService.getAll().then(r => setDrivers(r.data));
   useEffect(() => { load(); }, []);
 
-  const set = (k) => (e) => setForm(p => ({ ...p, [k]: e.target.value }));
+  const set = (k) => (e) => {
+    if (k === 'phone') {
+      const val = e.target.value.replace(/\D/g, '').slice(0, 10);
+      setForm(p => ({ ...p, phone: val }));
+    } else {
+      setForm(p => ({ ...p, [k]: e.target.value }));
+    }
+  };
   const openAdd = () => { setEditing(null); setForm(EMPTY); setError(''); setModal(true); };
   const openEdit = (d) => { setEditing(d); setForm(d); setError(''); setModal(true); };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); setError(''); setLoading(true);
+    e.preventDefault(); setError('');
+    if (form.phone.length !== 10) {
+      setError('Phone number must be exactly 10 digits');
+      return;
+    }
+    setLoading(true);
     try {
       if (editing) await driverService.update(editing.id, form);
       else await driverService.create(form);
@@ -131,7 +143,17 @@ export default function Drivers() {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <Input label="License Expiry" type="date" value={form.license_expiry} onChange={set('license_expiry')} required />
-            <Input label="Phone" value={form.phone} onChange={set('phone')} required />
+            <Input
+              label="Phone"
+              type="tel"
+              placeholder="10-digit number"
+              value={form.phone}
+              onChange={set('phone')}
+              maxLength={10}
+              pattern="[0-9]{10}"
+              error={form.phone && form.phone.length !== 10 ? 'Must be 10 digits' : ''}
+              required
+            />
           </div>
           {editing && (
             <Select label="Status" value={form.status} onChange={set('status')}>

@@ -5,9 +5,9 @@ import { Input, Select } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
 import { Modal } from '@/components/ui/Modal';
 import { Table, Thead, Th, Tbody, Tr, Td } from '@/components/ui/Table';
-import { Plus, ChevronRight } from 'lucide-react';
+import { Plus, ChevronRight, AlertTriangle } from 'lucide-react';
 
-const EMPTY = { start_location: '', end_location: '', vehicle_id: '', driver_id: '', start_mileage: '' };
+const EMPTY = { start_location: '', end_location: '', vehicle_id: '', driver_id: '', start_mileage: '', cargo_weight: '' };
 const NEXT_STATUS = { Scheduled: 'In Progress', 'In Progress': 'Completed' };
 
 export default function Trips() {
@@ -26,7 +26,17 @@ export default function Trips() {
   };
   useEffect(() => { load(); }, []);
 
-  const set = (k) => (e) => setForm(p => ({ ...p, [k]: e.target.value }));
+  const set = (k) => (e) => {
+    const updated = { ...form, [k]: e.target.value };
+    // Reset vehicle if cargo weight changes and selected vehicle can't handle it
+    if (k === 'cargo_weight') {
+      const selectedVehicle = vehicles.find(v => v.id === form.vehicle_id);
+      if (selectedVehicle?.capacity && parseFloat(e.target.value) > parseFloat(selectedVehicle.capacity)) {
+        updated.vehicle_id = '';
+      }
+    }
+    setForm(updated);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault(); setError(''); setLoading(true);
@@ -51,8 +61,26 @@ export default function Trips() {
     catch (err) { alert(err.response?.data?.error || 'Cancel failed'); }
   };
 
-  const activeVehicles = vehicles.filter(v => v.status === 'Active');
   const activeDrivers = drivers.filter(d => d.status === 'Active');
+
+  // Filter vehicles: Active status + capacity >= cargo_weight (if entered)
+  const cargoWeight = parseFloat(form.cargo_weight) || 0;
+  const eligibleVehicles = vehicles
+    .filter(v => v.status === 'Active')
+    .filter(v => !cargoWeight || !v.capacity || parseFloat(v.capacity) >= cargoWeight)
+    .sort((a, b) => {
+      // Sort: vehicles with enough capacity first, then by capacity ascending
+      const aCap = parseFloat(a.capacity) || 0;
+      const bCap = parseFloat(b.capacity) || 0;
+      return aCap - bCap;
+    });
+
+  const ineligibleVehicles = cargoWeight > 0
+    ? vehicles.filter(v => v.status === 'Active' && v.capacity && parseFloat(v.capacity) < cargoWeight)
+    : [];
+
+  const selectedVehicle = vehicles.find(v => v.id === form.vehicle_id);
+  const capacityWarning = selectedVehicle?.capacity && cargoWeight > 0 && cargoWeight > parseFloat(selectedVehicle.capacity);
 
   return (
     <div className="space-y-6">
@@ -68,7 +96,7 @@ export default function Trips() {
 
       <Table>
         <Thead>
-          <Th>Route</Th><Th>Vehicle</Th><Th>Driver</Th><Th>Start Mileage</Th><Th>Start Time</Th><Th>Status</Th><Th>Actions</Th>
+          <Th>Route</Th><Th>Vehicle</Th><Th>Driver</Th><Th>Cargo (kg)</Th><Th>Start Mileage</Th><Th>Status</Th><Th>Actions</Th>
         </Thead>
         <Tbody>
           {trips.length === 0 ? (
@@ -83,8 +111,8 @@ export default function Trips() {
               </Td>
               <Td>{t.vehicles?.registration_number || '—'}</Td>
               <Td>{t.drivers?.name || '—'}</Td>
+              <Td>{t.cargo_weight ? `${t.cargo_weight} kg` : '—'}</Td>
               <Td>{t.start_mileage} km</Td>
-              <Td>{t.start_time ? new Date(t.start_time).toLocaleDateString() : '—'}</Td>
               <Td><Badge status={t.status} /></Td>
               <Td>
                 <div className="flex gap-2">
@@ -108,19 +136,81 @@ export default function Trips() {
             <Input label="Start Location" placeholder="City / Location" value={form.start_location} onChange={set('start_location')} required />
             <Input label="End Location" placeholder="City / Location" value={form.end_location} onChange={set('end_location')} />
           </div>
-          <Select label="Vehicle" value={form.vehicle_id} onChange={set('vehicle_id')} required>
-            <option value="">Select vehicle...</option>
-            {activeVehicles.map(v => (
-              <option key={v.id} value={v.id}>{v.registration_number} — {v.make} {v.model}</option>
-            ))}
-          </Select>
+
+          {/* Cargo weight FIRST so vehicle list filters accordingly */}
+          <Input
+            label="Cargo Weight (kg)"
+            type="number"
+            min="0"
+            placeholder="Enter cargo weight to filter vehicles"
+            value={form.cargo_weight}
+            onChange={set('cargo_weight')}
+          />
+
+          {/* Vehicle selector — filtered by cargo capacity */}
+          <div className="flex flex-col gap-1">
+            <label className="text-sm text-gray-400">
+              Vehicle
+              {cargoWeight > 0 && (
+                <span className="ml-2 text-xs text-purple-400">
+                  — showing vehicles with capacity ≥ {cargoWeight} kg
+                </span>
+              )}
+            </label>
+            <select
+              className="bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+              value={form.vehicle_id}
+              onChange={set('vehicle_id')}
+              required
+            >
+              <option value="">Select vehicle...</option>
+              {eligibleVehicles.length > 0 && (
+                <optgroup label="✅ Eligible Vehicles">
+                  {eligibleVehicles.map(v => (
+                    <option key={v.id} value={v.id}>
+                      {v.registration_number} — {v.make} {v.model}
+                      {v.capacity ? ` (cap: ${v.capacity} kg)` : ' (no capacity set)'}
+                    </option>
+                  ))}
+                </optgroup>
+              )}
+              {ineligibleVehicles.length > 0 && (
+                <optgroup label="❌ Insufficient Capacity" disabled>
+                  {ineligibleVehicles.map(v => (
+                    <option key={v.id} value={v.id} disabled>
+                      {v.registration_number} — {v.make} {v.model} (cap: {v.capacity} kg)
+                    </option>
+                  ))}
+                </optgroup>
+              )}
+            </select>
+
+            {/* Capacity warning */}
+            {capacityWarning && (
+              <div className="flex items-center gap-2 text-yellow-400 text-xs mt-1">
+                <AlertTriangle size={12} />
+                Cargo weight exceeds vehicle capacity!
+              </div>
+            )}
+
+            {/* No eligible vehicles warning */}
+            {cargoWeight > 0 && eligibleVehicles.length === 0 && (
+              <div className="flex items-center gap-2 text-red-400 text-xs mt-1">
+                <AlertTriangle size={12} />
+                No active vehicles can handle {cargoWeight} kg cargo.
+              </div>
+            )}
+          </div>
+
           <Select label="Driver" value={form.driver_id} onChange={set('driver_id')} required>
             <option value="">Select driver...</option>
             {activeDrivers.map(d => (
               <option key={d.id} value={d.id}>{d.name} — {d.license_number}</option>
             ))}
           </Select>
+
           <Input label="Start Mileage (km)" type="number" value={form.start_mileage} onChange={set('start_mileage')} required />
+
           <div className="flex gap-3 pt-2">
             <Button type="button" variant="outline" className="flex-1" onClick={() => setModal(false)}>Cancel</Button>
             <Button type="submit" className="flex-1" disabled={loading}>{loading ? 'Creating...' : 'Create Trip'}</Button>
