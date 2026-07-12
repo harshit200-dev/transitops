@@ -8,7 +8,7 @@ import {
   PieChart, Pie, Cell, Legend
 } from 'recharts';
 
-const COLORS = ['#7c3aed', '#3b82f6', '#10b981', '#f59e0b'];
+const COLORS = ['#714b67', '#9e6089', '#b980a6', '#d4adc8'];
 
 export default function Dashboard() {
   const [data, setData] = useState(null);
@@ -71,7 +71,7 @@ export default function Dashboard() {
                   labelStyle={{ color: '#f9fafb' }}
                   formatter={(v) => [`₹${v.toFixed(2)}`, 'Amount']}
                 />
-                <Bar dataKey="amount" fill="#7c3aed" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="amount" fill="#714b67" radius={[4, 4, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>

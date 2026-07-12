@@ -10,7 +10,7 @@ export default function AppLayout() {
   if (!user) return <Navigate to="/login" replace />;
 
   return (
-    <div className={cn('flex h-screen overflow-hidden', theme === 'dark' ? 'bg-gray-950' : 'bg-gray-50')}>
+    <div className={cn('flex h-screen overflow-hidden', theme === 'dark' ? 'bg-[#1a0f17]' : 'bg-[#faf5f9]')}>
       <Sidebar />
       <main className="flex-1 overflow-y-auto">
         <div className="p-6 max-w-7xl mx-auto">

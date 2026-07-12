@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 
 export function Card({ className, children, ...props }) {
   return (
-    <div className={cn('bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-6', className)} {...props}>
+    <div className={cn('bg-white dark:bg-[#261828] border border-[#e8d2e2] dark:border-[#4e3347] rounded-xl p-6', className)} {...props}>
       {children}
     </div>
   );

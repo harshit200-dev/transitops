@@ -98,7 +98,7 @@ export default function Reports() {
                   contentStyle={{ backgroundColor: '#111827', border: '1px solid #374151', borderRadius: '8px' }}
                   formatter={(v) => [`₹${v}`, 'Fuel Cost']}
                 />
-                <Line type="monotone" dataKey="cost" stroke="#7c3aed" strokeWidth={2} dot={{ fill: '#7c3aed' }} />
+                <Line type="monotone" dataKey="cost" stroke="#714b67" strokeWidth={2} dot={{ fill: '#714b67' }} />
               </LineChart>
             </ResponsiveContainer>
           </CardContent>

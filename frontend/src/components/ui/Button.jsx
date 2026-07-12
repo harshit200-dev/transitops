@@ -2,9 +2,9 @@ import { cn } from '@/lib/utils';
 
 export function Button({ className, variant = 'default', size = 'default', children, ...props }) {
   const variants = {
-    default: 'bg-purple-600 hover:bg-purple-700 text-white',
-    outline: 'border border-gray-600 hover:bg-gray-800 text-gray-200',
-    ghost: 'hover:bg-gray-800 text-gray-300',
+    default: 'bg-[#714b67] hover:bg-[#5e3d56] text-white',
+    outline: 'border border-[#714b67] text-[#714b67] hover:bg-[#714b67] hover:text-white dark:border-[#9e6089] dark:text-[#d4adc8] dark:hover:bg-[#714b67] dark:hover:text-white',
+    ghost: 'hover:bg-[#714b67]/10 text-[#714b67] dark:text-[#d4adc8] dark:hover:bg-[#714b67]/20',
     danger: 'bg-red-600 hover:bg-red-700 text-white',
     success: 'bg-green-600 hover:bg-green-700 text-white',
   };
