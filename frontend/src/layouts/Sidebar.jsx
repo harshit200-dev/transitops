@@ -30,17 +30,17 @@ export default function Sidebar() {
   return (
     <aside className={cn(
       'w-64 flex flex-col h-screen sticky top-0 border-r',
-      isDark ? 'bg-[#1a0f17] border-[#4e3347]' : 'bg-white border-[#e8d2e2]'
+      isDark ? 'bg-gray-900 border-gray-800' : 'bg-white border-[#e8d2e2]'
     )}>
       {/* Logo */}
-      <div className={cn('p-6 border-b', isDark ? 'border-[#4e3347]' : 'border-[#e8d2e2]')}>
+      <div className={cn('p-6 border-b', isDark ? 'border-gray-800' : 'border-[#e8d2e2]')}>
         <div className="flex items-center gap-3">
           <div className="bg-[#714b67] p-2 rounded-lg">
             <Zap size={20} className="text-white" />
           </div>
           <div>
-            <h1 className={cn('font-bold text-lg leading-none', isDark ? 'text-white' : 'text-[#3d2838]')}>TransitOps</h1>
-            <p className={cn('text-xs mt-0.5', isDark ? 'text-[#9e6089]' : 'text-[#b980a6]')}>{t.fleetManagement}</p>
+            <h1 className={cn('font-bold text-lg leading-none', isDark ? 'text-white' : 'text-black')}>TransitOps</h1>
+            <p className={cn('text-xs mt-0.5', isDark ? 'text-gray-500' : 'text-[#b980a6]')}>{t.fleetManagement}</p>
           </div>
         </div>
       </div>
@@ -55,10 +55,10 @@ export default function Sidebar() {
             className={({ isActive }) => cn(
               'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
               isActive
-                ? 'bg-[#714b67]/20 text-[#714b67] border border-[#714b67]/40 dark:text-[#d4adc8]'
+                ? 'bg-[#714b67]/20 text-[#714b67] border border-[#714b67]/40 dark:bg-purple-600/20 dark:text-purple-400 dark:border-purple-600/30'
                 : isDark
-                  ? 'text-[#b980a6] hover:text-white hover:bg-[#714b67]/20'
-                  : 'text-[#714b67] hover:text-[#3d2838] hover:bg-[#f3e8f0]'
+                  ? 'text-gray-400 hover:text-white hover:bg-gray-800'
+                  : 'text-[#714b67] hover:text-black hover:bg-[#f3e8f0]'
             )}
           >
             <Icon size={18} />
@@ -68,13 +68,13 @@ export default function Sidebar() {
       </nav>
 
       {/* Theme & Language toggles */}
-      <div className={cn('px-4 py-3 border-t flex gap-2', isDark ? 'border-[#4e3347]' : 'border-[#e8d2e2]')}>
+      <div className={cn('px-4 py-3 border-t flex gap-2', isDark ? 'border-gray-800' : 'border-[#e8d2e2]')}>
         <button
           onClick={toggleTheme}
           className={cn(
             'flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-colors',
             isDark
-              ? 'bg-[#3d2838] text-[#d4adc8] hover:bg-[#4e3347]'
+              ? 'bg-gray-800 text-yellow-400 hover:bg-gray-700'
               : 'bg-[#f3e8f0] text-[#714b67] hover:bg-[#e8d2e2]'
           )}
         >
@@ -86,7 +86,7 @@ export default function Sidebar() {
           className={cn(
             'flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-colors',
             isDark
-              ? 'bg-[#3d2838] text-[#d4adc8] hover:bg-[#4e3347]'
+              ? 'bg-gray-800 text-[#d4adc8] hover:bg-gray-700'
               : 'bg-[#f3e8f0] text-[#714b67] hover:bg-[#e8d2e2]'
           )}
         >
@@ -96,19 +96,19 @@ export default function Sidebar() {
       </div>
 
       {/* User */}
-      <div className={cn('p-4 border-t', isDark ? 'border-[#4e3347]' : 'border-[#e8d2e2]')}>
+      <div className={cn('p-4 border-t', isDark ? 'border-gray-800' : 'border-[#e8d2e2]')}>
         <div className="flex items-center gap-3 mb-3">
           <div className="w-8 h-8 bg-[#714b67] rounded-full flex items-center justify-center text-white text-sm font-bold">
             {user?.name?.[0]?.toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">
-            <p className={cn('text-sm font-medium truncate', isDark ? 'text-white' : 'text-[#3d2838]')}>{user?.name}</p>
-            <p className={cn('text-xs truncate', isDark ? 'text-[#9e6089]' : 'text-[#b980a6]')}>{user?.role}</p>
+            <p className={cn('text-sm font-medium truncate', isDark ? 'text-white' : 'text-black')}>{user?.name}</p>
+            <p className={cn('text-xs truncate', isDark ? 'text-gray-500' : 'text-[#b980a6]')}>{user?.role}</p>
           </div>
         </div>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-[#9e6089] hover:text-red-500 hover:bg-red-500/10 rounded-lg transition-colors"
+          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-gray-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
         >
           <LogOut size={16} />
           {t.signOut}

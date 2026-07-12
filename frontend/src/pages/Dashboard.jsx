@@ -45,8 +45,8 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-white">Dashboard</h1>
-        <p className="text-gray-400 text-sm mt-1">Fleet operations overview</p>
+        <h1 className="text-2xl font-bold text-black dark:text-white">Dashboard</h1>
+        <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Fleet operations overview</p>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
@@ -105,10 +105,10 @@ export default function Dashboard() {
               { label: 'Fuel Costs', value: data.costs.fuel, color: 'text-blue-400' },
               { label: 'Maintenance', value: data.costs.maintenance, color: 'text-yellow-400' },
               { label: 'Other Expenses', value: data.costs.other, color: 'text-purple-400' },
-              { label: 'Total', value: data.costs.total, color: 'text-white font-bold' },
+              { label: 'Total', value: data.costs.total, color: 'text-black dark:text-white font-bold' },
             ].map(({ label, value, color }) => (
               <div key={label} className="flex justify-between items-center">
-                <span className="text-gray-400 text-sm">{label}</span>
+                <span className="text-gray-500 dark:text-gray-400 text-sm">{label}</span>
                 <span className={`text-sm ${color}`}>₹{value.toFixed(2)}</span>
               </div>
             ))}
@@ -125,8 +125,8 @@ export default function Dashboard() {
               { label: 'Completed', value: data.trips.completed },
             ].map(({ label, value }) => (
               <div key={label} className="flex justify-between items-center">
-                <span className="text-gray-400 text-sm">{label}</span>
-                <span className="text-white text-sm font-medium">{value}</span>
+                <span className="text-gray-500 dark:text-gray-400 text-sm">{label}</span>
+                <span className="text-black dark:text-white text-sm font-medium">{value}</span>
               </div>
             ))}
           </CardContent>
@@ -142,8 +142,8 @@ export default function Dashboard() {
               { label: 'Suspended', value: data.drivers.suspended },
             ].map(({ label, value }) => (
               <div key={label} className="flex justify-between items-center">
-                <span className="text-gray-400 text-sm">{label}</span>
-                <span className="text-white text-sm font-medium">{value}</span>
+                <span className="text-gray-500 dark:text-gray-400 text-sm">{label}</span>
+                <span className="text-black dark:text-white text-sm font-medium">{value}</span>
               </div>
             ))}
           </CardContent>

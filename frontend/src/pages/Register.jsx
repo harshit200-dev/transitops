@@ -50,7 +50,7 @@ export default function Register() {
         </div>
 
         <div className="bg-white dark:bg-[#261828] border border-[#e8d2e2] dark:border-[#4e3347] rounded-2xl p-8">
-          <h2 className="text-xl font-semibold text-[#3d2838] dark:text-white mb-6">Create your account</h2>
+          <h2 className="text-xl font-semibold text-black dark:text-white mb-6">Create your account</h2>
 
           {error && (
             <div className="bg-red-500/10 border border-red-500/30 text-red-400 text-sm rounded-lg px-4 py-3 mb-4">

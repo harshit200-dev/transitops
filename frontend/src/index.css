@@ -9,15 +9,15 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Dark mode */
-.dark body { background-color: #1a0f17; color: #f9fafb; }
+/* Dark mode (original) */
+.dark body { background-color: #030712; color: #f9fafb; }
 
-/* Light mode */
-:root:not(.dark) body { background-color: #faf5f9; color: #1a0f17; }
+/* Light mode (black text) */
+:root:not(.dark) body { background-color: #faf5f9; color: #000000; }
 
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-.dark ::-webkit-scrollbar-track { background: #261828; }
-.dark ::-webkit-scrollbar-thumb { background: #714b67; border-radius: 3px; }
-.dark ::-webkit-scrollbar-thumb:hover { background: #9e6089; }
+.dark ::-webkit-scrollbar-track { background: #111827; }
+.dark ::-webkit-scrollbar-thumb { background: #374151; border-radius: 3px; }
+.dark ::-webkit-scrollbar-thumb:hover { background: #4b5563; }
 :not(.dark) ::-webkit-scrollbar-track { background: #f3e8f0; }
 :not(.dark) ::-webkit-scrollbar-thumb { background: #b980a6; border-radius: 3px; }

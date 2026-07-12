@@ -58,22 +58,22 @@ export default function Vehicles() {
     'w-full border rounded-lg pl-9 pr-3 py-2 text-sm focus:outline-none focus:border-purple-500',
     theme === 'dark'
       ? 'bg-gray-800 border-gray-700 text-white placeholder-gray-500'
-      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-400'
+      : 'bg-white border-[#e8d2e2] text-black placeholder-gray-400'
   );
 
   const selectClass = cn(
     'border rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500',
     theme === 'dark'
       ? 'bg-gray-800 border-gray-700 text-white'
-      : 'bg-white border-gray-300 text-gray-900'
+      : 'bg-white border-[#e8d2e2] text-black'
   );
 
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className={cn('text-2xl font-bold', theme === 'dark' ? 'text-white' : 'text-gray-900')}>{t.vehicles}</h1>
-          <p className={cn('text-sm mt-1', theme === 'dark' ? 'text-gray-400' : 'text-gray-500')}>{vehicles.length} {t.totalVehicles}</p>
+          <h1 className={cn('text-2xl font-bold', theme === 'dark' ? 'text-white' : 'text-black')}>{t.vehicles}</h1>
+          <p className={cn('text-sm mt-1', theme === 'dark' ? 'text-gray-400' : 'text-gray-600')}>{vehicles.length} {t.totalVehicles}</p>
         </div>
         <Button onClick={openAdd}><Plus size={16} /> {t.addVehicle}</Button>
       </div>
@@ -105,7 +105,7 @@ export default function Vehicles() {
             <Tr><Td className="text-center py-8 text-gray-500" colSpan={8}>{t.noVehicles}</Td></Tr>
           ) : filtered.map(v => (
             <Tr key={v.id}>
-              <Td className={cn('font-medium', theme === 'dark' ? 'text-white' : 'text-gray-900')}>{v.registration_number}</Td>
+              <Td className={cn('font-medium', theme === 'dark' ? 'text-white' : 'text-black')}>{v.registration_number}</Td>
               <Td>{v.make} {v.model}</Td>
               <Td>{v.year}</Td>
               <Td>{v.fuel_type}</Td>
